@@ -1,18 +1,31 @@
 package com.sarpsolakoglu.popularmovies;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
+    public interface MovieAdapterOnClickListener {
+        public void onClick(Movie movie);
+    }
+
     private @NonNull List<Movie> dataSource = new ArrayList<>();
+
+    private MovieAdapterOnClickListener onClickListener;
+
+    public MovieAdapter(MovieAdapterOnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
 
     @NonNull
     @Override
@@ -24,7 +37,22 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-        holder.onBind(dataSource.get(position));
+        // Configure height of cell
+        ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
+        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+        params.height = metrics.widthPixels / Constants.SPAN_COUNT * 277 / 185;
+        holder.itemView.setLayoutParams(params);
+        // Get movie
+        final Movie movie = dataSource.get(position);
+        // Bind data to cell
+        holder.onBind(movie);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickListener.onClick(movie);
+            }
+        });
     }
 
     @Override

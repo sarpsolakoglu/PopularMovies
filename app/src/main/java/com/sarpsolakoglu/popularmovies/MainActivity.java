@@ -2,7 +2,9 @@ package com.sarpsolakoglu.popularmovies;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -14,7 +16,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -39,6 +41,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        GridLayoutManager layoutManager = new GridLayoutManager(this, Constants.SPAN_COUNT, GridLayoutManager.VERTICAL, false);
+        movieList.setLayoutManager(layoutManager);
+
+        mAdapter = new MovieAdapter(this);
+        movieList.setAdapter(mAdapter);
+
+        fetchPopular();
     }
 
     public void fetchPopular() {
@@ -64,5 +74,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void handleSuccess(List<Movie> movies) {
         mAdapter.setDataSource(movies);
+    }
+
+    @Override
+    public void onClick(Movie movie) {
+        Log.d(TAG, movie.original_title);
     }
 }

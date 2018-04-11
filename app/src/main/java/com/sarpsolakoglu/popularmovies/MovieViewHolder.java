@@ -15,10 +15,10 @@ public class MovieViewHolder extends RecyclerView.ViewHolder {
 
     public MovieViewHolder(View itemView) {
         super(itemView);
-        ButterKnife.bind(itemView);
+        ButterKnife.bind(this, itemView);
     }
 
     public void onBind(Movie data) {
-        Picasso.get().load(data.getImageURL()).centerCrop().into(mImageView);
+        Picasso.get().load(data.getImageURL()).into(mImageView);
     }
 }
