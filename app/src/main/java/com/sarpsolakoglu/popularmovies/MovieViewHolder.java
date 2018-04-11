@@ -18,7 +18,7 @@ public class MovieViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(itemView);
     }
 
-    public void onBind(MovieDataHolder dataHolder) {
-        Picasso.get().load(dataHolder.getImageURL()).centerCrop().into(mImageView);
+    public void onBind(Movie data) {
+        Picasso.get().load(data.getImageURL()).centerCrop().into(mImageView);
     }
 }

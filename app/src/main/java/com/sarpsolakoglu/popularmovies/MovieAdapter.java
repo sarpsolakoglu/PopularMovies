@@ -12,7 +12,7 @@ import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
-    private @NonNull List<MovieDataHolder> dataSource = new ArrayList<>();
+    private @NonNull List<Movie> dataSource = new ArrayList<>();
 
     @NonNull
     @Override
@@ -32,7 +32,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         return dataSource.size();
     }
 
-    public void setDataSource(@NonNull List<MovieDataHolder> dataSource) {
+    public void setDataSource(@NonNull List<Movie> dataSource) {
         this.dataSource = dataSource;
         notifyDataSetChanged();
     }
