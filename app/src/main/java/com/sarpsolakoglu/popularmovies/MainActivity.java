@@ -1,12 +1,19 @@
 package com.sarpsolakoglu.popularmovies;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -16,11 +23,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickListener {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickListener, AdapterView.OnItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.movie_list) RecyclerView movieList;
+    @BindView(R.id.loading_indicator) ProgressBar loadingIndicator;
+    @BindView(R.id.no_data_view) TextView noDataView;
 
     private MovieAdapter mAdapter;
 
@@ -51,15 +60,26 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         fetchPopular();
     }
 
-    public void fetchPopular() {
-        Client.getInstance().movieDatabaseService.popularMovies().enqueue(moviesResponseCallback);
+    private void fetchPopular() {
+        setViewLoadingState();
+        if (Client.getInstance().isOnline(this)) {
+            Client.getInstance().movieDatabaseService.popularMovies().enqueue(moviesResponseCallback);
+        } else {
+            handleNoInternetConnection();
+        }
     }
 
-    public void fetchTopRated() {
-        Client.getInstance().movieDatabaseService.topRatedMovies().enqueue(moviesResponseCallback);
+    private void fetchTopRated() {
+        setViewLoadingState();
+        if (Client.getInstance().isOnline(this)) {
+            Client.getInstance().movieDatabaseService.topRatedMovies().enqueue(moviesResponseCallback);
+        } else {
+            handleNoInternetConnection();
+        }
+
     }
 
-    public void handleResponse(Response<MoviesResponse> response) {
+    private void handleResponse(Response<MoviesResponse> response) {
         MoviesResponse moviesResponse = response.body();
         if (moviesResponse != null && !moviesResponse.results.isEmpty()) {
             handleSuccess(moviesResponse.results);
@@ -68,16 +88,81 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         }
     }
 
-    public void handleFailure() {
-        Log.d(TAG, "Failed");
+    private void handleFailure() {
+        setFailureState();
+        String failureMessage = getResources().getString(R.string.something_went_wrong);
+        Toast.makeText(this, failureMessage, Toast.LENGTH_LONG).show();
     }
 
-    public void handleSuccess(List<Movie> movies) {
+    private void handleNoInternetConnection() {
+        setFailureState();
+        String noInternetConnectionMessage = getResources().getString(R.string.no_internet_connection);
+        Toast.makeText(this, noInternetConnectionMessage, Toast.LENGTH_LONG).show();
+    }
+
+    private void handleSuccess(List<Movie> movies) {
+        setViewLoadedState();
         mAdapter.setDataSource(movies);
+    }
+
+    private void setViewLoadingState() {
+        movieList.setVisibility(View.INVISIBLE);
+        loadingIndicator.setVisibility(View.VISIBLE);
+        noDataView.setVisibility(View.INVISIBLE);
+    }
+
+    private void setViewLoadedState() {
+        movieList.setVisibility(View.VISIBLE);
+        loadingIndicator.setVisibility(View.INVISIBLE);
+        noDataView.setVisibility(View.INVISIBLE);
+    }
+
+    private void setFailureState() {
+        loadingIndicator.setVisibility(View.INVISIBLE);
+        if (mAdapter.getItemCount() > 0) {
+            movieList.setVisibility(View.VISIBLE);
+            noDataView.setVisibility(View.INVISIBLE);
+        } else {
+            movieList.setVisibility(View.INVISIBLE);
+            noDataView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        switch (pos) {
+            case 0: {
+                fetchPopular();
+                break;
+            }
+            default: {
+                fetchTopRated();
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        // Do nothing
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.spinner_menu, menu);
+        MenuItem item = menu.findItem(R.id.spinner_item);
+        Spinner spinner = (Spinner) item.getActionView();
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.sort_by_options, R.layout.spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+        return true;
     }
 
     @Override
     public void onClick(Movie movie) {
-        Log.d(TAG, movie.original_title);
+         Intent intent = new Intent(this, MovieActivity.class);
+         intent.putExtra(Constants.MOVIE_EXTRA, movie);
+         startActivity(intent);
     }
 }

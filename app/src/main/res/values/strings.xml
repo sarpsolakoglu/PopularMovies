@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">PopularMovies</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="something_went_wrong">Something went wrong, please try again</string>
+    <string name="sort_by">Sort By</string>
+    <string name="no_data">No Data</string>
+
+    <string-array name="sort_by_options">
+        <item>Popularity</item>
+        <item>Rating</item>
+    </string-array>
 </resources>

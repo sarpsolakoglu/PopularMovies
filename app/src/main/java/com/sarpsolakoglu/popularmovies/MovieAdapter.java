@@ -8,22 +8,27 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
     public interface MovieAdapterOnClickListener {
-        public void onClick(Movie movie);
+        void onClick(Movie movie);
     }
 
     private @NonNull List<Movie> dataSource = new ArrayList<>();
 
     private MovieAdapterOnClickListener onClickListener;
 
-    public MovieAdapter(MovieAdapterOnClickListener onClickListener) {
+    MovieAdapter(MovieAdapterOnClickListener onClickListener) {
         this.onClickListener = onClickListener;
     }
 
@@ -46,13 +51,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         final Movie movie = dataSource.get(position);
         // Bind data to cell
         holder.onBind(movie);
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickListener.onClick(movie);
-            }
-        });
     }
 
     @Override
@@ -63,5 +61,26 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     public void setDataSource(@NonNull List<Movie> dataSource) {
         this.dataSource = dataSource;
         notifyDataSetChanged();
+    }
+
+    public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        @BindView(R.id.movie_image_view)
+        ImageView mImageView;
+
+        MovieViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        void onBind(Movie data) {
+            Picasso.get().load(data.getImageURL()).into(mImageView);
+        }
+
+        @Override
+        public void onClick(View view) {
+            onClickListener.onClick(dataSource.get(getAdapterPosition()));
+        }
     }
 }

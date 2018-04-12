@@ -1,5 +1,9 @@
 package com.sarpsolakoglu.popularmovies;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import java.io.IOException;
 
 import okhttp3.HttpUrl;
@@ -65,4 +69,10 @@ public class Client {
 
         return instance;
     }
-}
+
+    public boolean isOnline(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
+        return (netInfo != null && netInfo.isConnected());
+    }
+ }
