@@ -14,8 +14,6 @@ import butterknife.ButterKnife;
 
 public class MovieActivity extends AppCompatActivity {
 
-    private static final String TAG = MovieActivity.class.getSimpleName();
-
     @BindView(R.id.movie_details_image_view) ImageView mPosterImageView;
     @BindView(R.id.overview_text_view) TextView mOverviewTextView;
     @BindView(R.id.rating_value_text_view) TextView mRatingTextView;

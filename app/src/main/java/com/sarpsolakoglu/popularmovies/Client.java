@@ -3,6 +3,7 @@ package com.sarpsolakoglu.popularmovies;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.NonNull;
 
 import java.io.IOException;
 
@@ -29,14 +30,14 @@ public class Client {
     private static final String mBaseURL = "http://api.themoviedb.org/3/";
 
     // variable of type String
-    public MovieDatabaseService movieDatabaseService;
+    public final MovieDatabaseService movieDatabaseService;
 
     // private constructor restricted to this class itself
     private Client()
     {
         OkHttpClient okHttpClient = new OkHttpClient().newBuilder().addInterceptor(new Interceptor() {
             @Override
-            public Response intercept(Chain chain) throws IOException {
+            public Response intercept(@NonNull Chain chain) throws IOException {
                 Request original = chain.request();
                 HttpUrl originalHttpUrl = original.url();
 
@@ -72,7 +73,10 @@ public class Client {
 
     public boolean isOnline(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
-        return (netInfo != null && netInfo.isConnected());
+        if (connectivityManager != null) {
+            NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
+            return (netInfo != null && netInfo.isConnected());
+        }
+        return false;
     }
  }

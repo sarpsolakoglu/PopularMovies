@@ -1,6 +1,7 @@
 package com.sarpsolakoglu.popularmovies;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,22 +26,20 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickListener, AdapterView.OnItemSelectedListener {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
-
     @BindView(R.id.movie_list) RecyclerView movieList;
     @BindView(R.id.loading_indicator) ProgressBar loadingIndicator;
     @BindView(R.id.no_data_view) TextView noDataView;
 
     private MovieAdapter mAdapter;
 
-    private Callback<MoviesResponse> moviesResponseCallback = new Callback<MoviesResponse>() {
+    private final Callback<MoviesResponse> moviesResponseCallback = new Callback<MoviesResponse>() {
         @Override
-        public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+        public void onResponse(@NonNull Call<MoviesResponse> call, @NonNull Response<MoviesResponse> response) {
             handleResponse(response);
         }
 
         @Override
-        public void onFailure(Call<MoviesResponse> call, Throwable t) {
+        public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable t) {
             handleFailure();
         }
     };
@@ -81,8 +80,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     private void handleResponse(Response<MoviesResponse> response) {
         MoviesResponse moviesResponse = response.body();
-        if (moviesResponse != null && !moviesResponse.results.isEmpty()) {
-            handleSuccess(moviesResponse.results);
+        if (moviesResponse != null && !moviesResponse.getResults().isEmpty()) {
+            handleSuccess(moviesResponse.getResults());
         } else {
             handleFailure();
         }

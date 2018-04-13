@@ -26,7 +26,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     private @NonNull List<Movie> dataSource = new ArrayList<>();
 
-    private MovieAdapterOnClickListener onClickListener;
+    private final MovieAdapterOnClickListener onClickListener;
 
     MovieAdapter(MovieAdapterOnClickListener onClickListener) {
         this.onClickListener = onClickListener;

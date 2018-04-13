@@ -2,10 +2,14 @@ package com.sarpsolakoglu.popularmovies;
 
 import java.util.List;
 
-public class MoviesResponse {
-    public final List<Movie> results;
+class MoviesResponse {
+    private final List<Movie> results;
 
     public MoviesResponse(List<Movie> results) {
         this.results = results;
+    }
+
+    public List<Movie> getResults() {
+        return results;
     }
 }

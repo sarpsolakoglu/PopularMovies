@@ -5,22 +5,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Movie implements Parcelable {
-    public final String original_title;
-    public final String overview;
-    public final String poster_path;
-    public final String release_date;
-    public final Double vote_average;
+    private final String original_title;
+    private final String overview;
+    private final String poster_path;
+    private final String release_date;
+    private final Double vote_average;
 
-
-    public Movie(String original_title, String overview, String poster_path, String release_date, Double vote_average) {
-        this.original_title = original_title;
-        this.overview = overview;
-        this.poster_path = poster_path;
-        this.release_date = release_date;
-        this.vote_average = vote_average;
-    }
-
-    public Movie(Parcel parcel) {
+    private Movie(Parcel parcel) {
         this.original_title = parcel.readString();
         this.overview = parcel.readString();
         this.poster_path = parcel.readString();
