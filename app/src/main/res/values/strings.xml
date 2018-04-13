@@ -4,6 +4,9 @@
     <string name="something_went_wrong">Something went wrong, please try again</string>
     <string name="sort_by">Sort By</string>
     <string name="no_data">No Data</string>
+    <string name="rating">Rating</string>
+    <string name="release_date">Release date</string>
+    <string name="movie_poster">movie poster</string>
 
     <string-array name="sort_by_options">
         <item>Popularity</item>

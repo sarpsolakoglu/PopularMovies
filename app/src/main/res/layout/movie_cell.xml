@@ -6,5 +6,6 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/movie_image_view"/>
+        android:id="@+id/movie_image_view"
+        android:contentDescription="@string/movie_poster" />
 </FrameLayout>

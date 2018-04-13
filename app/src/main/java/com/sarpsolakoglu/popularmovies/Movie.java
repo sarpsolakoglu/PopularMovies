@@ -60,4 +60,20 @@ public class Movie implements Parcelable {
     public int describeContents() {
         return 0;
     }
+
+    public String getOriginalTitle() {
+        return original_title;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public String getReleaseDate() {
+        return release_date;
+    }
+
+    public Double getVoteAverage() {
+        return vote_average;
+    }
 }
